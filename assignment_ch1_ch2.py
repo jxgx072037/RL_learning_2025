@@ -326,7 +326,38 @@ def compute_state_value_matrix_form(mdp: GridWorldMDP, policy: np.ndarray) -> np
         状态价值函数，shape=(num_states,)
     """
     # TODO: 在这里实现矩阵形式求解状态价值函数
-    pass
+    P_pi = np.zeros((mdp.num_states, mdp.num_states))
+
+    for state_idx in range(mdp.num_states):
+        state = mdp.index_to_state(state_idx)
+
+        for action_idx in range(len(mdp.actions)):
+            action_prob = policy[state_idx][action_idx]
+            action = mdp.actions[action_idx]
+
+            next_state = mdp.get_next_state(state, action)
+            next_state_idx = mdp.state_to_index(next_state)
+            trans_prob = mdp.get_transition_prob(state, action, next_state)
+            P_pi[state_idx, next_state_idx] += trans_prob * action_prob
+
+    r_pi = np.zeros(mdp.num_states)
+
+    for state_idx in range(mdp.num_states):
+        state = mdp.index_to_state(state_idx)
+
+        for action_idx in range(len(mdp.actions)):
+            action_prob = policy[state_idx][action_idx]
+            action = mdp.actions[action_idx]
+
+            next_state = mdp.get_next_state(state, action)
+
+            reward = mdp.get_reward(state, action, next_state)
+            r_pi[state_idx] += reward * action_prob
+    
+    I_pi = np.eye(mdp.num_states)
+    v_pi = np.linalg.solve(I_pi - mdp.gamma * P_pi, r_pi)
+
+    return v_pi
 
 
 # ============================================================================

@@ -3,6 +3,7 @@
 ## ✅ 已完成的步骤
 
 1. ✅ 已安装 `pdf-tools-mcp` 包
+2. ✅ 已在 Cursor MCP 配置文件中添加 pdf-tools 服务器配置
 
 ## 📋 在 Cursor 中配置 MCP 服务器
 
@@ -45,21 +46,25 @@ Cursor 的 MCP 配置文件通常位于：
 
 如果上述方法不工作，使用 Python 的完整路径：
 
+**当前环境配置（已应用）：**
 ```json
 {
   "mcpServers": {
     "pdf-tools": {
-      "command": "C:\\Users\\johnnyqiao\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "command": "C:\\Users\\adim\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
       "args": [
         "-m",
         "pdf_tools_mcp",
         "--workspace_path",
-        "C:\\Users\\johnnyqiao\\Desktop\\personal_project\\20251107_强化学习"
+        "E:\\Personal_porject\\20251116_rl_learning\\RL_learning_2025"
       ]
     }
   }
 }
 ```
+
+**配置文件位置：**
+- `C:\Users\adim\.cursor\mcp.json`
 
 ## 🔍 验证配置
 
