@@ -9,7 +9,7 @@
 """
 
 import numpy as np
-from typing import Tuple, List, Dict
+from typing import Any, Tuple, List, Dict
 import matplotlib.pyplot as plt
 
 
@@ -98,7 +98,7 @@ class GridWorldMDP:
             (x, y) 坐标
         """
         # TODO: 在这里实现索引到状态的转换
-        return (index % self.grid_size[0], index // self.grid_size[0])
+        return (index % self.grid_size[1], index // self.grid_size[1])
     
     def is_valid_state(self, state: Tuple[int, int]) -> bool:
         """
@@ -391,7 +391,28 @@ def verify_bellman_equation(mdp: GridWorldMDP,
         (是否满足贝尔曼方程, 最大误差)
     """
     # TODO: 在这里实现贝尔曼方程验证
-    pass
+    v_pi_right_value = np.zeros(mdp.num_states)
+
+    for state_idx in range(mdp.num_states):
+
+        for action_idx, action in enumerate(mdp.actions):
+            state = mdp.index_to_state(state_idx)
+            next_state = mdp.get_next_state(state, action)
+            next_state_idx = mdp.state_to_index(next_state)
+
+            reward = mdp.get_reward(state, action, next_state)
+            v_pi_next_state = state_values[next_state_idx]
+
+            action_prob = policy[state_idx, action_idx]
+
+            trans_prob = mdp.get_transition_prob(state, action, next_state)
+            v_pi_right_value[state_idx] += action_prob * trans_prob* (reward + mdp.gamma * v_pi_next_state)
+
+    max_error = np.max(np.abs(v_pi_right_value - state_values))
+    if max_error < tolerance:
+        return True, max_error
+    else:
+        return False, max_error
 
 
 # ============================================================================
